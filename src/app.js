@@ -7,6 +7,11 @@ const app = express();
 
 app.use(express.json()); // Parse JSON request bodies
 
+// Root route
+app.get('/', (req, res) => {
+  res.send('User Management Service is running!');
+});
+
 // Mount user routes
 app.use('/api/users', userRoutes);
 
