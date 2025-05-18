@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: examplepassword
+      MONGO_INITDB_DATABASE: userdb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+  user-service:
+    build: .
+    container_name: user-service
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+    environment:
+      MONGO_USERNAME: root
+      MONGO_PASSWORD: examplepassword
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+      MONGO_DBNAME: userdb
+      JWT_SECRET: your_jwt_secret
+      NODE_ENV: development
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+
+volumes:
+  mongo-data:
